@@ -33,6 +33,10 @@ options sfs			# Always use the file system
 
 options dumbvm			# Chewing gum and baling wire.
 
+# SYSCALL (LAB 2)
+options file_syscalls   # LAB2 related (read and write)
+options proc_syscalls   # LAB2 related (exit)
+
 # PRIMITIVE DI SYNCHRO (LAB 3)
 # options synch_1     #Prima implementazione
 options synch_2     #Seconda implementazione

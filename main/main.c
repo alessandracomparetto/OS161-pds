@@ -211,14 +211,16 @@ sys_reboot(int code)
  * request, and then shut down.
  */
 
-unsigned long* allocSize = NULL;
+
+/******************************** LAB 2
+ unsigned long* allocSize = NULL;
 unsigned char* freeRamFrames = NULL;
 
 
 vaddr_t va1 = 0;
 vaddr_t va2 = 0;
 vaddr_t va3 = 0;
-vaddr_t va4 = 0;
+vaddr_t va4 = 0; */
 
 void
 kmain(char *arguments)
@@ -229,7 +231,7 @@ kmain(char *arguments)
 	hello();
 #endif
 
-#if OPT_FILE_SYSCALLS
+/* #if OPT_FILE_SYSCALLS
 	kprintf("Prova della write:\n");
 	char buf[] = "Patience Yields Focus.";
 	sys_write(1, (void *) buf, 22);
@@ -239,7 +241,7 @@ kmain(char *arguments)
 	sys_read(0, (void *) buf2, 20);
 	kprintf("ok e ora:\n");
 	sys_write(1, (void *) buf2, 20);
-#endif
+#endif */
 
 	/* freeRamFrames = getfreeRamFrames();
 	allocSize = getallocSize();
