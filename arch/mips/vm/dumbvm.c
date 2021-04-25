@@ -64,10 +64,56 @@
  */
 static struct spinlock stealmem_lock = SPINLOCK_INITIALIZER;
 
+/*
+* LAB 2 : allocazione della memoria
+*/
+static struct spinlock freemem_lock = SPINLOCK_INITIALIZER; 
+static unsigned char *freeRamFrames = NULL; /* 1=> pieni, 0=> liberi*/
+static unsigned long *allocSize = NULL;
+static int nRamFrames = 0;
+static long ffi = 0; //first free index (dopo quelli allocati al kernel)
+//non si aggiorna più dopo che la tabella è attiva
+
+static int allocTableActive = 0;
+
+static 
+int isTableActive(){
+	int active;
+	spinlock_acquire (&freemem_lock);
+	active = allocTableActive;
+	spinlock_release(&freemem_lock);
+	return active;
+}
+
+unsigned char* getfreeRamFrames(){ return freeRamFrames;}
+unsigned long* getallocSize(){return allocSize;}
+
 void
-vm_bootstrap(void)
+vm_bootstrap(void) //inizializzazione
 {
-	/* Do nothing. */
+	int i; 
+	nRamFrames = ((int)ram_getsize()) /PAGE_SIZE; 
+	/* alloc freeRamFrame and allocSize */ 
+	freeRamFrames = kmalloc (sizeof(unsigned char)*nRamFrames); 
+	allocSize = kmalloc (sizeof (unsigned long) *nRamFrames) ; 
+
+	if (freeRamFrames == NULL || allocSize == NULL) { 
+		/* reset to disable this vrn management */ 
+		freeRamFrames = NULL;
+		allocSize = NULL;
+		return; 
+	}
+
+	for ( i=0; i<nRamFrames; i++) { 
+		freeRamFrames[i] = (unsigned char) 0; //tutti sono liberi 
+		allocSize[i] = 0;
+	}
+
+	spinlock_acquire (&freemem_lock);
+	allocTableActive = 1;
+	spinlock_release (&freemem_lock) ; 
+
+	/* in questa funzione si sistema il vettore per le pagine allocate */
 }
 
 /*
@@ -94,13 +140,64 @@ static
 paddr_t
 getppages(unsigned long npages)
 {
-	paddr_t addr;
+	paddr_t addr, laddr; 
+	//addr è il primo indirizzo assegnato per le npages richieste,
+	//laddr è il primo indirizzo del prossimo frame libero
+	long i, first, found;
+	long lfi = 0;//oltre questo indice non controllo
 
-	spinlock_acquire(&stealmem_lock);
+	if (!isTableActive()){
+		//getppages viene chiamata per la prima volta, prima di vm_bootstrap.
+		//in questa chiamata viene allocata la memoria per il kernel
+		spinlock_acquire(&stealmem_lock);
+		addr = ram_stealmem(npages);
+		spinlock_release(&stealmem_lock);
 
-	addr = ram_stealmem(npages);
+		laddr = get_firstfree();
+		ffi = (long) laddr / PAGE_SIZE;
+		return addr;
+	}
 
-	spinlock_release(&stealmem_lock);
+	laddr = get_firstfree(); 
+	lfi = (long) laddr / PAGE_SIZE;
+
+	spinlock_acquire(&freemem_lock);
+	for (i = ffi, first=found=-1; i<lfi; i++){
+		if(freeRamFrames[i]==0){
+			if ((i>ffi && freeRamFrames[i-1]==1) || i == ffi){
+				first = i; //set first free in an interval
+			}
+			if (i-first+1 >= (long) npages){
+				found = first; 
+			}
+		}
+	}
+	if (found >= 0){
+		for( i=found; i<found+ (long) npages; i++){
+			freeRamFrames[i] = (unsigned char)1;
+		}
+		allocSize[found] = npages;
+		addr = (paddr_t) (found * PAGE_SIZE);
+	}else{
+		addr = 0;
+	}
+	spinlock_release(&freemem_lock);
+	
+	if (addr == 0){ //call stealmem
+		spinlock_acquire(&stealmem_lock);
+		addr = ram_stealmem(npages);
+		spinlock_release(&stealmem_lock);
+		found = (long) addr / PAGE_SIZE;
+
+		for( i=found; i<found+ (long) npages; i++){
+			freeRamFrames[i] = (unsigned char)1;
+		}
+	}
+	if (addr != 0 && isTableActive()){
+		spinlock_acquire(&freemem_lock);
+		allocSize[addr/PAGE_SIZE] = npages;  // write in allocsize how many pages
+		spinlock_release(&freemem_lock);
+	}
 	return addr;
 }
 
@@ -118,12 +215,33 @@ alloc_kpages(unsigned npages)
 	return PADDR_TO_KVADDR(pa);
 }
 
+static
+int
+freeppages (paddr_t addr, unsigned long npages){
+	long i, first, np = (long) npages;
+	if(!isTableActive()) return 0;
+	first = addr / PAGE_SIZE;
+	KASSERT(allocSize!= NULL);
+	KASSERT(nRamFrames>first);
+
+	spinlock_acquire(&freemem_lock);
+	for(i=first; i<first+np; i++){
+		freeRamFrames[i] = (unsigned char) 0;
+	}
+	spinlock_release(&freemem_lock);
+	
+	return 1;
+}
+
 void
 free_kpages(vaddr_t addr)
 {
-	/* nothing - leak the memory. */
-
-	(void)addr;
+	if (isTableActive()){
+		paddr_t paddr = addr - MIPS_KSEG0;
+		long first = paddr / PAGE_SIZE;
+		KASSERT (nRamFrames > first);
+		freeppages(paddr, allocSize[first]);
+	}
 }
 
 void
@@ -257,6 +375,9 @@ void
 as_destroy(struct addrspace *as)
 {
 	dumbvm_can_sleep();
+	freeppages (as->as_pbase1, as->as_npages1);
+	freeppages (as->as_pbase1, as->as_npages2);
+	freeppages (as-> as_stackpbase, DUMBVM_STACKPAGES);
 	kfree(as);
 }
 

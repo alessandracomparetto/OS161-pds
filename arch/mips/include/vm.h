@@ -110,6 +110,9 @@ paddr_t ram_stealmem(unsigned long npages);
 paddr_t ram_getsize(void);
 paddr_t ram_getfirstfree(void);
 
+//LAB2
+paddr_t get_firstfree(void);
+
 /*
  * TLB shootdown bits.
  *

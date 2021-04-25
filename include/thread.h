@@ -107,6 +107,11 @@ struct thread {
 	 */
 
 	/* add more here as needed */
+
+	/*
+	* LAB 2 
+	*/
+	int status; 				/* final status at the end of the execution (codice di errore / successo)*/
 };
 
 /*

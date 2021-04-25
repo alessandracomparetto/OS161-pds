@@ -109,6 +109,11 @@ ram_stealmem(unsigned long npages)
 	return paddr;
 }
 
+paddr_t 
+get_firstfree(){
+	return firstpaddr;  // questa funzione ritorna il primo indirizzo disponibile 
+}
+
 /*
  * This function is intended to be called by the VM system when it
  * initializes in order to find out what memory it has available to

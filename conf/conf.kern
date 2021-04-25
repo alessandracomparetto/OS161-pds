@@ -443,6 +443,21 @@ file		test/fstest.c
 optfile net	test/nettest.c
 
 #####################################
+#LAB 1
+#####################################
+defoption 	hello
+optfile 	hello	 main/hello.c
+
+#####################################
+#LAB 2
+#####################################
+defoption 	file_syscalls
+optfile 	file_syscalls	 syscall/file_syscalls.c
+
+defoption 	proc_syscalls
+optfile 	proc_syscalls	 syscall/proc_syscalls.c
+
+#####################################
 # SYNCHRO 
 #####################################
 defoption   synch_1

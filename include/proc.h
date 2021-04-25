@@ -71,6 +71,11 @@ struct proc {
 	struct vnode *p_cwd;		/* current working directory */
 
 	/* add more material here as needed */
+
+	/*
+	* LAB 2 
+	*/
+	int status; 				/* final status at the end of the execution (codice di errore / successo)*/
 };
 
 /* This is the process structure for the kernel and for kernel-only threads. */

@@ -51,6 +51,11 @@
 #include <version.h>
 #include "autoconf.h"  // for pseudoconfig
 
+// LAB 1
+#include "hello.h"
+
+// LAB2
+#include "../include/file_syscalls.h" 
 
 /*
  * These two pieces of data are maintained by the makefiles and build system.
@@ -205,12 +210,48 @@ sys_reboot(int code)
  * Kernel main. Boot up, then fork the menu thread; wait for a reboot
  * request, and then shut down.
  */
+
+unsigned long* allocSize = NULL;
+unsigned char* freeRamFrames = NULL;
+
+
+vaddr_t va1 = 0;
+vaddr_t va2 = 0;
+vaddr_t va3 = 0;
+vaddr_t va4 = 0;
+
 void
 kmain(char *arguments)
 {
 	boot();
+	
+#if OPT_HELLO
+	hello();
+#endif
 
+#if OPT_FILE_SYSCALLS
+	kprintf("Prova della write:\n");
+	char buf[] = "Patience Yields Focus.";
+	sys_write(1, (void *) buf, 22);
+
+	kprintf("Prova della read:\n");
+	char buf2[20];
+	sys_read(0, (void *) buf2, 20);
+	kprintf("ok e ora:\n");
+	sys_write(1, (void *) buf2, 20);
+#endif
+
+	/* freeRamFrames = getfreeRamFrames();
+	allocSize = getallocSize();
+
+	va1 = alloc_kpages(4);
+	va2 = alloc_kpages(2);
+	free_kpages(va1);
+	va3 = alloc_kpages(2);
+	va4 = alloc_kpages(3);
+	va3 = alloc_kpages(2);  */
+
+	// (void)arguments;
 	menu(arguments);
-
 	/* Should not get here */
 }
