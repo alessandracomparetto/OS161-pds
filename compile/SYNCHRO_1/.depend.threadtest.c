@@ -6,4 +6,4 @@ threadtest.o: ../../test/threadtest.c ../../include/types.h \
  includelinks/machine/spinlock.h ../../include/threadlist.h \
  includelinks/machine/thread.h ../../include/setjmp.h \
  includelinks/kern/machine/setjmp.h ../../include/synch.h opt-synch_1.h \
- opt-synch_2.h ../../include/test.h
+ opt-synch_2.h opt-condition_var.h ../../include/test.h

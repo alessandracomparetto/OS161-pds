@@ -282,55 +282,96 @@ lock_do_i_hold(struct lock *lock)
 struct cv *
 cv_create(const char *name)
 {
-        struct cv *cv;
+    struct cv *cv;
 
-        cv = kmalloc(sizeof(*cv));
-        if (cv == NULL) {
-                return NULL;
-        }
+    cv = kmalloc(sizeof(*cv));
+    if (cv == NULL) {
+            return NULL;
+    }
 
-        cv->cv_name = kstrdup(name);
-        if (cv->cv_name==NULL) {
-                kfree(cv);
-                return NULL;
-        }
+    cv->cv_name = kstrdup(name);
+    if (cv->cv_name==NULL) {
+            kfree(cv);
+            return NULL;
+    }
 
-        // add stuff here as needed
+    // add stuff here as needed
 
-        return cv;
+    #if OPT_CONDITION_VAR 
+        spinlock_init(&cv->cv_slock);
+        cv->cv_wchan = wchan_create("wchan");
+    #endif
+
+    return cv;
 }
 
 void
 cv_destroy(struct cv *cv)
 {
-        KASSERT(cv != NULL);
+    KASSERT(cv != NULL);
 
-        // add stuff here as needed
+    // add stuff here as needed
+    #if OPT_CONDITION_VAR 
+        spinlock_cleanup(&cv->cv_slock);
+        wchan_destroy(cv->cv_wchan);
+    #endif
 
-        kfree(cv->cv_name);
-        kfree(cv);
+    kfree(cv->cv_name);
+    kfree(cv);
 }
 
 void
 cv_wait(struct cv *cv, struct lock *lock)
 {
         // Write this
+    #if !OPT_CONDITION_VAR
         (void)cv;    // suppress warning until code gets written
-        (void)lock;  // suppress warning until code gets written
+        (void)lock;  // suppress warning until code gets written 
+    #endif
+
+    #if OPT_CONDITION_VAR 
+        //è importante che il thread corrente sia owner del lock. lo verifica lock release
+        spinlock_acquire(&cv->cv_slock);
+        lock_release(lock);
+        wchan_sleep(cv->cv_wchan, &cv->cv_slock);
+        lock_acquire(lock);
+        spinlock_release(&cv->cv_slock);
+    #endif
 }
 
 void
 cv_signal(struct cv *cv, struct lock *lock)
 {
         // Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+	#if !OPT_CONDITION_VAR
+        (void)cv;    // suppress warning until code gets written
+        (void)lock;  // suppress warning until code gets written 
+    #endif
+
+    #if OPT_CONDITION_VAR 
+        KASSERT (lock_do_i_hold(lock));
+
+        spinlock_acquire(&cv->cv_slock);
+        wchan_wakeone(cv->cv_wchan, &cv->cv_slock);
+        spinlock_release(&cv->cv_slock);
+        
+    #endif
 }
 
 void
 cv_broadcast(struct cv *cv, struct lock *lock)
 {
 	// Write this
-	(void)cv;    // suppress warning until code gets written
-	(void)lock;  // suppress warning until code gets written
+	#if !OPT_CONDITION_VAR
+        (void)cv;    // suppress warning until code gets written
+        (void)lock;  // suppress warning until code gets written 
+    #endif
+
+    #if OPT_CONDITION_VAR 
+        KASSERT (lock_do_i_hold(lock));
+        
+        spinlock_acquire(&cv->cv_slock);
+        wchan_wakeall(cv->cv_wchan, &cv->cv_slock);
+        spinlock_release(&cv->cv_slock);
+    #endif
 }

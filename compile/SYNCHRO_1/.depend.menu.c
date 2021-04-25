@@ -8,9 +8,9 @@ menu.o: ../../main/menu.c ../../include/types.h \
  ../../include/kern/time.h ../../include/mainbus.h ../../include/synch.h \
  ../../include/spinlock.h ../../include/hangman.h opt-hangman.h \
  includelinks/machine/spinlock.h opt-synch_1.h opt-synch_2.h \
- ../../include/thread.h ../../include/array.h ../../include/threadlist.h \
- includelinks/machine/thread.h ../../include/setjmp.h \
- includelinks/kern/machine/setjmp.h ../../include/proc.h \
- ../../include/vfs.h ../../include/sfs.h ../../include/fs.h \
- ../../include/vnode.h ../../include/kern/sfs.h ../../include/syscall.h \
- ../../include/test.h opt-sfs.h opt-net.h
+ opt-condition_var.h ../../include/thread.h ../../include/array.h \
+ ../../include/threadlist.h includelinks/machine/thread.h \
+ ../../include/setjmp.h includelinks/kern/machine/setjmp.h \
+ ../../include/proc.h ../../include/vfs.h ../../include/sfs.h \
+ ../../include/fs.h ../../include/vnode.h ../../include/kern/sfs.h \
+ ../../include/syscall.h ../../include/test.h opt-sfs.h opt-net.h

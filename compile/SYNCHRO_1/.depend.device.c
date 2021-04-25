@@ -7,4 +7,4 @@ device.o: ../../vfs/device.c ../../include/types.h \
  ../../include/uio.h ../../include/kern/iovec.h ../../include/synch.h \
  ../../include/spinlock.h ../../include/hangman.h opt-hangman.h \
  includelinks/machine/spinlock.h opt-synch_1.h opt-synch_2.h \
- ../../include/vnode.h ../../include/device.h
+ opt-condition_var.h ../../include/vnode.h ../../include/device.h

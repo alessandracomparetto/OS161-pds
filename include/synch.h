@@ -38,6 +38,7 @@
 #include <spinlock.h>
 #include "opt-synch_1.h"
 #include "opt-synch_2.h"
+#include "opt-condition_var.h"
 
 /*
  * Dijkstra-style semaphore.
@@ -46,10 +47,10 @@
  * internally.
  */
 struct semaphore {
-        char *sem_name;
+    char *sem_name;
 	struct wchan *sem_wchan;
 	struct spinlock sem_lock;
-        volatile unsigned sem_count;
+    volatile unsigned sem_count;
 };
 
 struct semaphore *sem_create(const char *name, unsigned initial_count);
@@ -126,9 +127,16 @@ bool lock_do_i_hold(struct lock *);
  */
 
 struct cv {
-        char *cv_name;
-        // add what you need here
-        // (don't forget to mark things volatile as needed)
+    char *cv_name;
+
+    // add what you need here
+    // (don't forget to mark things volatile as needed)
+
+    #if OPT_CONDITION_VAR 
+        struct wchan *cv_wchan;
+        struct spinlock cv_slock;
+    #endif
+    
 };
 
 struct cv *cv_create(const char *name);

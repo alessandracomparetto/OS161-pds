@@ -10,7 +10,7 @@ main.o: ../../main/main.c ../../include/types.h \
  ../../include/setjmp.h includelinks/kern/machine/setjmp.h \
  ../../include/proc.h ../../include/current.h \
  includelinks/machine/current.h ../../include/synch.h opt-synch_1.h \
- opt-synch_2.h ../../include/vm.h includelinks/machine/vm.h \
- ../../include/mainbus.h ../../include/vfs.h ../../include/device.h \
- ../../include/syscall.h ../../include/test.h ../../include/version.h \
- autoconf.h
+ opt-synch_2.h opt-condition_var.h ../../include/vm.h \
+ includelinks/machine/vm.h ../../include/mainbus.h ../../include/vfs.h \
+ ../../include/device.h ../../include/syscall.h ../../include/test.h \
+ ../../include/version.h autoconf.h

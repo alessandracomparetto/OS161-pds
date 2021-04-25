@@ -135,6 +135,8 @@ defoption   synch_1
 optfile     synch_1 include/synch.h
 defoption   synch_2
 optfile     synch_2 include/synch.h
+defoption   condition_var
+optfile     condition_var include/synch.h
 debug				
 device lamebus0			
 device emu* at lamebus*		
@@ -151,3 +153,4 @@ options semfs
 options sfs			
 options dumbvm			
 options synch_2     
+options condition_var   

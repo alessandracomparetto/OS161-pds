@@ -33,6 +33,7 @@ options sfs			# Always use the file system
 
 options dumbvm			# Chewing gum and baling wire.
 
-# SYNCHRO
+# PRIMITIVE DI SYNCHRO (LAB 3)
 # options synch_1     #Prima implementazione
 options synch_2     #Seconda implementazione
+options condition_var   #implementazione delle condition variables

@@ -7,4 +7,4 @@ synch.o: ../../thread/synch.c ../../include/types.h \
  includelinks/machine/thread.h ../../include/setjmp.h \
  includelinks/kern/machine/setjmp.h ../../include/current.h \
  includelinks/machine/current.h ../../include/synch.h opt-synch_1.h \
- opt-synch_2.h
+ opt-synch_2.h opt-condition_var.h
