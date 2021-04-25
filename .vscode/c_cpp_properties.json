@@ -1,0 +1,23 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "/home/os161user/os161/os161-base-2.0.3/kern/include/",
+                "/home/os161user/os161/os161-base-2.0.3/kern/include/kern/",
+                "/home/os161user/os161/os161-base-2.0.3/kern/lib/",
+                "/home/os161user/os161/os161-base-2.0.3/kern/compile/DUMBVM/",
+                "/home/os161user/os161/os161-base-2.0.3/kern/compile/DUMBVM/includelinks/",
+                "/home/os161user/os161/os161-base-2.0.3/kern/compile/LAB2/",
+                "/home/os161user/os161/os161-base-2.0.3/kern/compile/LAB2/includelinks/",
+                "${workspaceFolder}/include"
+            ],
+            "defines": [],
+            "compilerPath": "/home/os161user/os161/tools/bin/mips-harvard-os161-gcc",
+            "cStandard": "c99",
+            "cppStandard": "c++14",
+            "intelliSenseMode": "gcc-x64"
+        }
+    ],
+    "version": 4
+}
