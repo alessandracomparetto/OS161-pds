@@ -334,8 +334,8 @@ cv_wait(struct cv *cv, struct lock *lock)
         spinlock_acquire(&cv->cv_slock);
         lock_release(lock);
         wchan_sleep(cv->cv_wchan, &cv->cv_slock);
-        lock_acquire(lock);
         spinlock_release(&cv->cv_slock);
+        lock_acquire(lock);
     #endif
 }
 
