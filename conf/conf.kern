@@ -446,10 +446,5 @@ optfile net	test/nettest.c
 # SYNCHRO 
 #####################################
 defoption   synch_1
-optfile     synch_1 include/synch.h
-
 defoption   synch_2
-optfile     synch_2 include/synch.h
-
 defoption   condition_var
-optfile     condition_var include/synch.h
