@@ -125,11 +125,11 @@ syscall(struct trapframe *tf)
 			break;
 		#endif
 
-		#if OPT_PROC_SYSCALLS
-			case SYS__exit:
-			sys__exit((int) tf->tf_a0);
-			break;
-		#endif
+		
+		case SYS__exit:
+		sys__exit((int) tf->tf_a0);
+		break;
+		
 		/////////////////////////////
 
 	    default:

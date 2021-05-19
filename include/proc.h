@@ -72,10 +72,12 @@ struct proc {
 
 	/* add more material here as needed */
 
-	/*
-	* LAB 2 
-	*/
+	/* LAB 2 */
 	int status; 				/* final status at the end of the execution (codice di errore / successo)*/
+
+	// #if OPT_WAIT4ME
+		struct cv *p_cv;
+	// #endif
 };
 
 /* This is the process structure for the kernel and for kernel-only threads. */
@@ -102,5 +104,7 @@ struct addrspace *proc_getas(void);
 /* Change the address space of the current process, and return the old one. */
 struct addrspace *proc_setas(struct addrspace *);
 
+/* Proc wait come indicato da LAB4.1*/
+int proc_wait(struct proc *);
 
 #endif /* _PROC_H_ */

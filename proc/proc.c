@@ -48,6 +48,7 @@
 #include <current.h>
 #include <addrspace.h>
 #include <vnode.h>
+#include <synch.h>
 
 /*
  * The process for the kernel; this holds all the kernel-only threads.
@@ -81,6 +82,10 @@ proc_create(const char *name)
 
 	/* VFS fields */
 	proc->p_cwd = NULL;
+
+	#if OPT_WAIT4ME
+		proc->p_cv = cv_create(p_cv);
+	#endif
 
 	return proc;
 }
@@ -318,3 +323,19 @@ proc_setas(struct addrspace *newas)
 	spinlock_release(&proc->p_lock);
 	return oldas;
 }
+
+/*
+ * LAB4.1 definizione della funzione proc_wait
+ */
+int
+proc_wait(struct proc *p)
+{
+	kprintf("Proc wait invocata");
+	struct lock *l = lock_create("wait4me");
+	lock_acquire(l);
+	cv_wait(p->p_cv, l);
+	lock_release(l);
+	
+	proc_destroy(p);
+	return curproc->status;
+};

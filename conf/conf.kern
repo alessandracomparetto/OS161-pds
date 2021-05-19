@@ -463,3 +463,8 @@ optfile 	proc_syscalls	 syscall/proc_syscalls.c
 defoption   synch_1
 defoption   synch_2
 defoption   condition_var
+
+#####################################
+# LAB4
+#####################################
+defoption   wait4me

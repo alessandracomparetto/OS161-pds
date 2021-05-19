@@ -23,11 +23,26 @@
 #include <syscall.h>
 
 #include <proc_syscalls.h>
+#include <synch.h>
 
 void 
 sys__exit(int status){
     struct addrspace* as = proc_getas();
     as_destroy((struct addrspace *)as);
-    (void)status;
+
+    #if !OPT_WAIT4ME
+        (void)status;
+    #endif
+
+    // #if OPT_WAIT4ME
+        struct lock *l = lock_create("wait4me");
+        curproc->status = status;
+        proc_remthread(curthread);
+
+        lock_acquire(l);
+        cv_signal(curproc->p_cv, l);
+        lock_release(l);
+    // #endif
+    
     thread_exit();   
 }
