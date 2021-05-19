@@ -45,7 +45,7 @@
 #include <test.h>
 #include "opt-sfs.h"
 #include "opt-net.h"
-
+#include "opt-wait4me.h"
 /*
  * In-kernel menu and command dispatcher.
  */
@@ -138,11 +138,11 @@ common_prog(int nargs, char **args)
 	 * once you write the code for handling that.
 	 */
 
-	// #if OPT_WAIT4ME
+	#if OPT_WAIT4ME
 		int exit_code;
 		exit_code = proc_wait(proc);
-		kprintf("****\n exit_code del thread è %d%s",exit_code,"\n****\n");
-	// #endif
+		kprintf("****\n exit_code del thread è %d%s",exit_code,"\n****\n\n");
+	#endif
 
 	return 0;
 }

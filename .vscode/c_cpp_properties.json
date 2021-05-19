@@ -52,7 +52,8 @@
                 "${env:HOME}/os161/root/include/types",
                 "${env:HOME}/os161/root/include/sys",
                 "${env:HOME}/os161/root/include/machine",
-                "${workspaceFolder}/compile/SYNCHRO_1"
+                "${workspaceFolder}/compile/SYNCHRO_1",
+                "${workspaceFolder}/compile/LAB4"
             ],
             "defines": [],
             "compilerPath": "${env:HOME}/os161/tools/bin/mips-harvard-os161-gcc",

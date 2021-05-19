@@ -84,7 +84,7 @@ proc_create(const char *name)
 	proc->p_cwd = NULL;
 
 	#if OPT_WAIT4ME
-		proc->p_cv = cv_create(p_cv);
+		proc->p_cv = cv_create("p_cv");
 	#endif
 
 	return proc;
@@ -330,12 +330,15 @@ proc_setas(struct addrspace *newas)
 int
 proc_wait(struct proc *p)
 {
-	kprintf("Proc wait invocata");
 	struct lock *l = lock_create("wait4me");
+	int status;
+
 	lock_acquire(l);
 	cv_wait(p->p_cv, l);
 	lock_release(l);
 	
+	status = p->status;
 	proc_destroy(p);
-	return curproc->status;
+
+	return status;
 };

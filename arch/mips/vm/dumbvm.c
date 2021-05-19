@@ -218,6 +218,8 @@ alloc_kpages(unsigned npages)
 static
 int
 freeppages (paddr_t addr, unsigned long npages){
+
+	#if FUNZIONA //questa opzione non verrà mai definita.
 	long i, first, np = (long) npages;
 	if(!isTableActive()) return 0;
 	first = addr / PAGE_SIZE;
@@ -229,7 +231,9 @@ freeppages (paddr_t addr, unsigned long npages){
 		freeRamFrames[i] = (unsigned char) 0;
 	}
 	spinlock_release(&freemem_lock);
-	
+	#endif
+	(void)addr;
+	(void)npages;
 	return 1;
 }
 
