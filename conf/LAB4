@@ -38,9 +38,10 @@ options file_syscalls   # LAB2 related (read and write)
 options proc_syscalls   # LAB2 related (exit)
 
 # PRIMITIVE DI SYNCHRO (LAB 3)
-# options synch_1     #Prima implementazione
-options synch_2     #Seconda implementazione
+# options synch_1       #Prima implementazione
+options synch_2         #Seconda implementazione
 options condition_var   #implementazione delle condition variables
 
 # LAB4
-options wait4me    #Lab4.1
+#options wait4me         #Lab4.1
+options wait4mepid      #Lab4.2

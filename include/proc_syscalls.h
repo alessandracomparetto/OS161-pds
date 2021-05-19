@@ -4,8 +4,8 @@
 #include "../compile/LAB2/opt-proc_syscalls.h"
 #include <types.h>
 
-#if OPT_PROC_SYSCALLS
 void sys__exit(int status);
-#endif
+pid_t sys_getpid (struct proc *);
+int sys_waitpid(pid_t);
 
 #endif /* _PROC_SYSCALLS_H_ */

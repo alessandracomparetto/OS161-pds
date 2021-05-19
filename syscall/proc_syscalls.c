@@ -26,20 +26,21 @@
 #include <synch.h>
 
 #include "opt-wait4me.h"
+#include "proc.h"
 
 void 
 sys__exit(int status){
     
-    #if !OPT_WAIT4ME
+    #if !OPT_WAIT4ME || !OPT_WAIT4MEPID
         struct addrspace* as = proc_getas();
         as_destroy((struct addrspace *)as);
 
         (void)status;
     #endif
 
-    #if OPT_WAIT4ME
+    #if OPT_WAIT4ME || OPT_WAIT4MEPID
         struct lock *l = lock_create("wait4me");
-        struct proc *p = curproc;
+        struct proc *p = curthread->t_proc;
         p->status = status;
 
         proc_remthread(curthread);
@@ -50,4 +51,18 @@ sys__exit(int status){
     #endif
     
     thread_exit();   
+}
+
+pid_t
+sys_getpid (struct proc * proc){
+    return proc->pid;
+}
+
+int
+sys_waitpid (pid_t pid){
+
+    KASSERT(thread_attivi[pid] != NULL);
+	struct proc *p = thread_attivi[pid];
+
+    return proc_wait(p);
 }

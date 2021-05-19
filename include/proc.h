@@ -38,6 +38,7 @@
 
 #include <spinlock.h>
 #include "opt-wait4me.h"
+#include "opt-wait4mepid.h"
 
 struct addrspace;
 struct thread;
@@ -77,10 +78,16 @@ struct proc {
 	int status; 				/* final status at the end of the execution (codice di errore / successo)*/
 
 	//LAB 4.1
-	#if OPT_WAIT4ME
+	#if OPT_WAIT4ME || OPT_WAIT4MEPID
 		struct cv *p_cv;
 	#endif
+
+	//LAB 4.3
+	pid_t pid;
+	
 };
+#define NTHREADS 100
+struct proc * thread_attivi[NTHREADS];
 
 /* This is the process structure for the kernel and for kernel-only threads. */
 extern struct proc *kproc;

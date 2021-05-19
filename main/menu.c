@@ -115,7 +115,7 @@ int
 common_prog(int nargs, char **args)
 {
 	struct proc *proc;
-	int result;
+	int result, exit_code;
 
 	/* Create a process for the new program to run in. */
 	proc = proc_create_runprogram(args[0] /* name */);
@@ -137,11 +137,18 @@ common_prog(int nargs, char **args)
 	 * The new process will be destroyed when the program exits...
 	 * once you write the code for handling that.
 	 */
-
+	#if !OPT_WAIT4ME && !OPT_WAIT4MEPID
+		(void)exit_code;
+	#endif
 	#if OPT_WAIT4ME
-		int exit_code;
 		exit_code = proc_wait(proc);
 		kprintf("****\n exit_code del thread è %d%s",exit_code,"\n****\n\n");
+	#endif
+
+	#if OPT_WAIT4MEPID
+		int pid = (int) sys_getpid(proc);
+		exit_code = sys_waitpid(pid);
+		kprintf("****\n exit_code del thread %d è %d%s", (int) pid, exit_code,"\n****\n\n");
 	#endif
 
 	return 0;

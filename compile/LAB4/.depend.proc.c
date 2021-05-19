@@ -3,10 +3,11 @@ proc.o: ../../proc/proc.c ../../include/types.h \
  includelinks/machine/types.h ../../include/spl.h ../../include/cdefs.h \
  ../../include/proc.h ../../include/spinlock.h ../../include/hangman.h \
  opt-hangman.h includelinks/machine/spinlock.h opt-wait4me.h \
- ../../include/current.h includelinks/machine/current.h \
+ opt-wait4mepid.h ../../include/current.h includelinks/machine/current.h \
  ../../include/thread.h ../../include/array.h ../../include/lib.h \
  opt-noasserts.h ../../include/threadlist.h includelinks/machine/thread.h \
  ../../include/setjmp.h includelinks/kern/machine/setjmp.h \
  ../../include/addrspace.h ../../include/vm.h includelinks/machine/vm.h \
  opt-dumbvm.h ../../include/vnode.h ../../include/synch.h opt-synch_1.h \
- opt-synch_2.h opt-condition_var.h
+ opt-synch_2.h opt-condition_var.h ../../include/limits.h \
+ ../../include/kern/limits.h

@@ -49,11 +49,23 @@
 #include <addrspace.h>
 #include <vnode.h>
 #include <synch.h>
+#include <limits.h>
+
+
 
 /*
  * The process for the kernel; this holds all the kernel-only threads.
  */
 struct proc *kproc;
+
+/*
+* LAB 4.3 creazione della tabella come variabile globale
+* questa è un vettore di puntatori a processi
+* il pid l'indice, ne consegue che i pid dei figli andranno da 2 a 99 
+* #define __PID_MIN       2
+*/
+	// thread_attivi[NTHREADS];
+	int next_thread = PID_MIN;
 
 /*
  * Create a proc structure.
@@ -83,9 +95,19 @@ proc_create(const char *name)
 	/* VFS fields */
 	proc->p_cwd = NULL;
 
-	#if OPT_WAIT4ME
+	#if OPT_WAIT4ME || OPT_WAIT4MEPID
 		proc->p_cv = cv_create("p_cv");
 	#endif
+
+	#if OPT_WAIT4MEPID	
+		proc->pid = (pid_t) next_thread;
+		thread_attivi[next_thread] = proc;
+		next_thread++;
+		if(next_thread>=NTHREADS){
+			next_thread = PID_MIN; //sovrascrivo. pazienza.
+		}
+
+	#endif 
 
 	return proc;
 }
@@ -172,6 +194,11 @@ proc_destroy(struct proc *proc)
 
 	KASSERT(proc->p_numthreads == 0);
 	spinlock_cleanup(&proc->p_lock);
+
+	#if OPT_WAIT4MEPID
+		//cancello dalla struttura il processo!
+		thread_attivi[proc->pid] = NULL;
+	#endif
 
 	kfree(proc->p_name);
 	kfree(proc);
