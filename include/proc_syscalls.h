@@ -5,7 +5,9 @@
 #include <types.h>
 
 void sys__exit(int status);
-pid_t sys_getpid (struct proc *);
-int sys_waitpid(pid_t);
+
+//LAB4.4
+pid_t sys_getpid (void);
+pid_t sys_waitpid(pid_t, int *, int);
 
 #endif /* _PROC_SYSCALLS_H_ */

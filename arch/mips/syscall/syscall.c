@@ -132,11 +132,11 @@ syscall(struct trapframe *tf)
 		
 		//LAB 4.4
 		case SYS_getpid:
-		err = sys_getpid((struct proc *) tf->tf_a0);
+		retval = sys_getpid();
 		break;
 
 		case SYS_waitpid:
-		err = sys_waitpid((pid_t) tf->tf_a0);
+		retval = sys_waitpid((pid_t)tf->tf_a0, (int *) tf->tf_a1, (int) tf->tf_a2);
 		break;
 
 		/////////////////////////////

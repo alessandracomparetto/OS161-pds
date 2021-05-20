@@ -14,4 +14,5 @@ menu.o: ../../main/menu.c ../../include/types.h \
  ../../include/proc.h opt-wait4me.h opt-wait4mepid.h ../../include/vfs.h \
  ../../include/sfs.h ../../include/fs.h ../../include/vnode.h \
  ../../include/kern/sfs.h ../../include/syscall.h ../../include/test.h \
- opt-sfs.h opt-net.h
+ opt-sfs.h opt-net.h ../../include/proc_syscalls.h \
+ ../../include/../compile/LAB2/opt-proc_syscalls.h

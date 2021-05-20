@@ -86,8 +86,6 @@ struct proc {
 	pid_t pid;
 	
 };
-#define NTHREADS 100
-struct proc * thread_attivi[NTHREADS];
 
 /* This is the process structure for the kernel and for kernel-only threads. */
 extern struct proc *kproc;
@@ -115,5 +113,8 @@ struct addrspace *proc_setas(struct addrspace *);
 
 /* Proc wait come indicato da LAB4.1*/
 int proc_wait(struct proc *);
+
+/* funzione di ricerca nella struttura dei thread LAB 4.4*/
+struct proc * proc_search_pid(pid_t);
 
 #endif /* _PROC_H_ */

@@ -51,7 +51,7 @@
 #include <synch.h>
 #include <limits.h>
 
-
+#define NTHREADS 100
 
 /*
  * The process for the kernel; this holds all the kernel-only threads.
@@ -64,7 +64,7 @@ struct proc *kproc;
 * il pid l'indice, ne consegue che i pid dei figli andranno da 2 a 99 
 * #define __PID_MIN       2
 */
-	// thread_attivi[NTHREADS];
+	struct proc * thread_attivi[NTHREADS];
 	int next_thread = PID_MIN;
 
 /*
@@ -369,3 +369,12 @@ proc_wait(struct proc *p)
 
 	return status;
 };
+
+/*
+* LAB 4.4 ricerca della struttura processo per PID
+*/
+struct proc * 
+proc_search_pid(pid_t pid){
+	KASSERT(thread_attivi[pid] != NULL);
+	return thread_attivi[pid];
+}

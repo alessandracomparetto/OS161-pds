@@ -31,7 +31,7 @@
 void 
 sys__exit(int status){
     
-    #if !OPT_WAIT4ME || !OPT_WAIT4MEPID
+    #if !OPT_WAIT4ME && !OPT_WAIT4MEPID
         struct addrspace* as = proc_getas();
         as_destroy((struct addrspace *)as);
 
@@ -48,21 +48,29 @@ sys__exit(int status){
         lock_acquire(l);
         cv_signal(p->p_cv, l);
         lock_release(l);
+        
     #endif
     
     thread_exit();   
 }
 
 pid_t
-sys_getpid (struct proc * proc){
-    return proc->pid;
+sys_getpid (void){
+    KASSERT(curproc!= NULL);
+    return curproc->pid;
 }
 
-int
-sys_waitpid (pid_t pid){
+pid_t
+sys_waitpid (pid_t pid, int *statusp, int options){
+    (void) options; //non so che farmene
+    struct proc *p = proc_search_pid(pid);
+    int s;
 
-    KASSERT(thread_attivi[pid] != NULL);
-	struct proc *p = thread_attivi[pid];
+    s = proc_wait(p);
 
-    return proc_wait(p);
+	if(statusp!=NULL){
+        *statusp = s;
+    }
+
+    return pid;
 }

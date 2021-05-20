@@ -46,6 +46,8 @@
 #include "opt-sfs.h"
 #include "opt-net.h"
 #include "opt-wait4me.h"
+#include "proc_syscalls.h"
+
 /*
  * In-kernel menu and command dispatcher.
  */
@@ -146,8 +148,9 @@ common_prog(int nargs, char **args)
 	#endif
 
 	#if OPT_WAIT4MEPID
-		int pid = (int) sys_getpid(proc);
-		exit_code = sys_waitpid(pid);
+		pid_t pid = sys_getpid();
+		int *s = &(proc->status);
+		exit_code = sys_waitpid(pid, s , 0);
 		kprintf("****\n exit_code del thread %d è %d%s", (int) pid, exit_code,"\n****\n\n");
 	#endif
 
