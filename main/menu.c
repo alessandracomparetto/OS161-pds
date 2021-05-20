@@ -148,10 +148,16 @@ common_prog(int nargs, char **args)
 	#endif
 
 	#if OPT_WAIT4MEPID
-		pid_t pid = sys_getpid();
-		int *s = &(proc->status);
-		exit_code = sys_waitpid(pid, s , 0);
-		kprintf("****\n exit_code del thread %d è %d%s", (int) pid, exit_code,"\n****\n\n");
+		// pid_t pid = sys_getpid(); 
+		/*
+		* questo torna il pid del kernel e non del processo appena creato
+		* funziona con i processi user. ma noi siamo a livello kernel
+		*/
+		pid_t pid = proc->pid;
+		int status;
+		exit_code = sys_waitpid(pid, &status , 1);
+		//exit code adesso è il pid
+		kprintf("****\n exit_code del thread %d è %d%s", exit_code, status,"\n****\n\n");
 	#endif
 
 	return 0;
