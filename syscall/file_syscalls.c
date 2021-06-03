@@ -32,7 +32,7 @@ struct openfile
 	struct vnode *vn;
 	off_t offset;
 	//unsigned int countRef;
-	unsigned int fd; //file descriptor
+	int fd; //file descriptor
 };
 
 struct openfile systemFileTable[SYSTEM_OPEN_MAX]; 
@@ -80,6 +80,30 @@ sys_open(userptr_t path, int openflags, mode_t mode, int *errp){
 	//se qualosa va male devo chiudere
 	vfs_close(v);
 	return -1;
+}
+
+
+int
+sys_close(int fd){
+	struct openfile *of = NULL;
+	struct vnode *vn;
+	int index;
+
+	if(fd <0 || fd>OPEN_MAX) return -1;
+	for(int i = 0; i < OPEN_MAX; i++){
+		if (curproc->fileTable[i]->fd ==fd){
+			of = curproc->fileTable[i];
+			index = i;
+			break;
+		}
+	}
+	if(of == NULL) return -1;
+	curproc->fileTable[index] = NULL;
+	vn = of->vn;
+	of->vn = NULL;
+	if(vn == NULL) return -1;
+	vfs_close(vn);
+	return 0;
 }
 
 //il ritorno di entrambe le funzioni è il numero di byte letti

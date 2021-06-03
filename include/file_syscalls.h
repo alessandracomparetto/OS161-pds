@@ -10,8 +10,8 @@ ssize_t sys_read (int filehandle, void *buf, size_t size);
 #endif
 
 //#if OPT_FILE
-int
-sys_open(userptr_t path, int openflags, mode_t mode, int *errp);
+int sys_open(userptr_t path, int openflags, mode_t mode, int *errp);
+int sys_close(int fd);
 //#endif
 
 #endif /* _FILE_SYSCALLS_H_ */
