@@ -4,7 +4,9 @@
         "lib.h": "c",
         "opt-noasserts.h": "c",
         "version.h": "c",
-        "syscall.h": "c"
+        "syscall.h": "c",
+        "errno.h": "c",
+        "current.h": "c"
     },
     "C_Cpp.intelliSenseEngineFallback": "Disabled"
 }

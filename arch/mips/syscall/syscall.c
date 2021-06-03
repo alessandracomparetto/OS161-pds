@@ -149,6 +149,14 @@ syscall(struct trapframe *tf)
 
 		/////////////////////////////
 
+		// LAB5
+		case SYS_open:
+		retval = sys_open((userptr_t) tf->tf_a0,
+							(int) tf->tf_a1,
+							(mode_t) tf->tf_a2,
+							(int*) tf->tf_a3);
+		break;
+
 	    default:
 		kprintf("Unknown syscall %d\n", callno);
 		err = ENOSYS;

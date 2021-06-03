@@ -39,6 +39,8 @@
 #include <spinlock.h>
 #include "opt-wait4me.h"
 #include "opt-wait4mepid.h"
+// #include "opt-file.h"
+#include "limits.h" //to use OPEN_MAX
 
 struct addrspace;
 struct thread;
@@ -84,6 +86,11 @@ struct proc {
 
 	//LAB 4.3
 	pid_t pid;
+
+	//LAB 5
+	// #if OPT_FILE
+	struct openfile *fileTable [OPEN_MAX];
+	// #endif
 	
 };
 

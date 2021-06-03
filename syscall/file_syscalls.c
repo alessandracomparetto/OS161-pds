@@ -9,8 +9,78 @@
 #include <syscall.h>
 #include <kern/unistd.h>
 #include <lib.h>
+#include <limits.h>
 
 #include "../include/file_syscalls.h" 
+
+/*******************************
+ * LAB 5
+ *  struct openfile, systemFiletable, open, close
+ *  read, write
+*********************************/
+#include <kern/errno.h> 
+#include <vnode.h>
+#include <vfs.h>
+#include <current.h>
+#include <proc.h>
+#define SYSTEM_OPEN_MAX (10*OPEN_MAX)
+#define USE_KERNEL_BUFFER 0
+
+/* system open file table */
+struct openfile
+{
+	struct vnode *vn;
+	off_t offset;
+	//unsigned int countRef;
+	unsigned int fd; //file descriptor
+};
+
+struct openfile systemFileTable[SYSTEM_OPEN_MAX]; 
+
+/*
+* File system calls for open / close
+*/
+
+int
+sys_open(userptr_t path, int openflags, mode_t mode, int *errp){
+	struct vnode *v;
+	struct openfile *of = NULL;
+	int result;
+
+	result = vfs_open((char *) path, openflags, mode, &v);
+	if (result){
+		*errp = ENOENT;
+		return -1;
+	}
+
+	/* search open file system table*/
+	for (int i = 0; i<SYSTEM_OPEN_MAX; i++){
+		if(systemFileTable[i].vn == NULL){
+			of = &systemFileTable[i];
+			of->vn = v;
+			of->fd = i;
+			of->offset = 0; //lmao
+			break;
+		}
+	}
+	if(of==NULL){
+		//no free slot
+		*errp = ENFILE;
+	}else{
+		/*add in perprocess file table*/
+		for(int i = 0; i < OPEN_MAX; i++){
+			if (curproc->fileTable[i] == NULL){
+				curproc->fileTable[i] = of;
+				return i;
+			}
+		}
+		//no free slots
+		*errp = EMFILE;
+	}
+	//se qualosa va male devo chiudere
+	vfs_close(v);
+	return -1;
+}
 
 //il ritorno di entrambe le funzioni è il numero di byte letti
 
