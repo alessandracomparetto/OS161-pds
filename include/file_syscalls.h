@@ -3,10 +3,11 @@
 
 #include "../compile/LAB2/opt-file_syscalls.h"
 #include <types.h>
+#include "../compile/LAB5/opt-file.h"
 
 #if OPT_FILE_SYSCALLS
-ssize_t sys_write (int filehandle, const void *buf, size_t size);
-ssize_t sys_read (int filehandle, void *buf, size_t size);
+int sys_write(int fd, userptr_t buf_ptr, size_t size);
+int sys_read(int fd, userptr_t buf_ptr, size_t size);
 #endif
 
 //#if OPT_FILE

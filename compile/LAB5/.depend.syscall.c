@@ -10,5 +10,5 @@ syscall.o: ../../arch/mips/syscall/syscall.c ../../include/types.h \
  includelinks/machine/current.h ../../include/syscall.h \
  ../../include/file_syscalls.h \
  ../../include/../compile/LAB2/opt-file_syscalls.h \
- ../../include/proc_syscalls.h \
+ ../../include/../compile/LAB5/opt-file.h ../../include/proc_syscalls.h \
  ../../include/../compile/LAB2/opt-proc_syscalls.h

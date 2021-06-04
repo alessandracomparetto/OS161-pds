@@ -16,4 +16,5 @@ main.o: ../../main/main.c ../../include/types.h \
  ../../include/vfs.h ../../include/device.h ../../include/syscall.h \
  ../../include/test.h ../../include/version.h autoconf.h \
  ../../include/hello.h opt-hello.h ../../main/../include/file_syscalls.h \
- ../../main/../include/../compile/LAB2/opt-file_syscalls.h
+ ../../main/../include/../compile/LAB2/opt-file_syscalls.h \
+ ../../main/../include/../compile/LAB5/opt-file.h
